@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<!-- saved from url=(0254)file:///C:/Users/crank/AppData/Local/Packages/Claude_pzs8sxrjxfjjc/LocalCache/Roaming/Claude/local-agent-mode-sessions/1e1fe879-7ee1-489b-ada2-c238834b3954/9ca9ceb8-f540-4894-bbf2-8e23ed976281/local_fefbe88b-b5ec-429d-bc2f-84361d087f2e/outputs/index.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade Journal</title>
+<script src="./Trade Journal_files/chart.umd.min.js.download"></script>
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --panel-2: #1c2230; --border: #2a3140;
+    --text: #e6edf3; --muted: #8b949e;
+    --accent: #7c5cff; --accent-2: #5eead4;
+    --green: #22c55e; --red: #ef4444; --yellow: #f59e0b;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+    background: var(--bg); color: var(--text); font-size: 14px;
+  }
+  .app { display: grid; grid-template-columns: 240px 1fr; height: 100vh; }
+  .app.hidden { display: none; }
+  .sidebar { background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+  .brand { padding: 18px 20px; font-size: 18px; font-weight: 700; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .brand-dot { width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 0 12px var(--accent); }
+  .nav { padding: 12px 8px; display: flex; flex-direction: column; gap: 2px; }
+  .nav button { background: transparent; border: 0; color: var(--muted); padding: 9px 12px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; }
+  .nav button:hover, .nav button.active { background: var(--panel-2); color: var(--text); }
+  .nav button .icon { display: inline-block; width: 18px; margin-right: 8px; opacity: .8; }
+  .nav button.hidden { display: none; }
+  .students { padding: 12px; border-top: 1px solid var(--border); flex: 1; overflow-y: auto; }
+  .students h4 { margin: 4px 4px 8px; color: var(--muted); font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; }
+  .student-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-radius: 8px; cursor: pointer; margin-bottom: 2px; }
+  .student-row:hover { background: var(--panel-2); }
+  .student-row.active { background: var(--panel-2); border: 1px solid var(--accent); }
+  .student-row .name { font-weight: 500; }
+  .student-row .pnl { font-size: 12px; color: var(--muted); }
+  .pnl.pos { color: var(--green); } .pnl.neg { color: var(--red); }
+  .who { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .who-name { font-size: 12px; }
+  .who-role { font-size: 10px; text-transform: uppercase; color: var(--accent-2); letter-spacing: .08em; }
+  .conn { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+  .conn.live { background: var(--green); box-shadow: 0 0 8px var(--green); }
+  .main { overflow-y: auto; padding: 28px 36px 60px; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
+  .topbar h1 { margin: 0; font-size: 24px; font-weight: 700; }
+  .topbar .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .kpi { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+  .kpi .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  .kpi .value { font-size: 22px; font-weight: 700; margin-top: 6px; }
+  .kpi .value.pos { color: var(--green); } .kpi .value.neg { color: var(--red); }
+  .kpi .sub { color: var(--muted); font-size: 12px; margin-top: 4px; }
+  .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+  .card h3 { margin: 0 0 14px; font-size: 16px; font-weight: 600; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; font-weight: 500; }
+  input, select, textarea { width: 100%; padding: 9px 11px; background: var(--panel-2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; font-size: 14px; font-family: inherit; }
+  input:focus, select:focus, textarea:focus { outline: 0; border-color: var(--accent); }
+  textarea { min-height: 70px; resize: vertical; }
+  .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; }
+  .checkbox-item { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .checkbox-item:hover { border-color: var(--accent); }
+  .checkbox-item input { width: auto; accent-color: var(--accent); }
+  .checkbox-item.checked { background: rgba(124,92,255,.12); border-color: var(--accent); }
+  .btn { padding: 9px 16px; border: 0; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 600; font-family: inherit; transition: all .15s; }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #6b4ce0; }
+  .btn-secondary { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--accent); }
+  .btn-danger { background: transparent; color: var(--red); border: 1px solid var(--red); }
+  .btn-danger:hover { background: var(--red); color: white; }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { text-align: left; color: var(--muted); font-weight: 600; padding: 10px 12px; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 11px; letter-spacing: .05em; }
+  td { padding: 12px; border-bottom: 1px solid var(--border); }
+  tr:hover td { background: rgba(255,255,255,.02); }
+  .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .pill-long { background: rgba(34,197,94,.12); color: var(--green); }
+  .pill-short { background: rgba(239,68,68,.12); color: var(--red); }
+  .pill-mistake { background: rgba(245,158,11,.15); color: var(--yellow); margin-right: 4px; }
+  .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty h3 { color: var(--text); margin-bottom: 6px; }
+  .row { display: flex; gap: 12px; align-items: center; }
+  .row.between { justify-content: space-between; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } .app { grid-template-columns: 1fr; } .sidebar { display: none; } }
+  .pos { color: var(--green); } .neg { color: var(--red); } .mut { color: var(--muted); }
+  .view { display: none; }
+  .view.active { display: block; }
+  .bar-row { display: grid; grid-template-columns: 160px 1fr 100px; align-items: center; gap: 12px; padding: 8px 0; }
+  .bar-track { background: var(--panel-2); height: 22px; border-radius: 6px; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+  /* Login screen */
+  .login-bg { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 20px; }
+  .login-bg.hidden { display: none; }
+  .login-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 32px; max-width: 420px; width: 100%; }
+  .login-card h1 { margin: 0 0 6px; font-size: 22px; }
+  .login-card .sub { color: var(--muted); margin-bottom: 24px; font-size: 13px; }
+  .login-card .field { margin-bottom: 14px; }
+  .login-error { color: var(--red); font-size: 12px; margin-top: 8px; min-height: 14px; }
+  .config-warning { padding: 12px 16px; background: rgba(245,158,11,.1); border: 1px solid var(--yellow); border-radius: 8px; color: var(--yellow); font-size: 13px; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     LOGIN SCREEN
+============================================================ -->
+<div class="login-bg" id="loginScreen">
+  <div class="login-card">
+    <h1>Trade Journal</h1>
+    <div class="sub">Enter your name and class code to sign in.</div>
+    <div id="configWarning" class="config-warning hidden">
+      ⚠ Firebase isn't configured yet. Open <code>index.html</code>, paste your Firebase config near the top, then reload.
+    </div>
+    <div class="field">
+      <label>Your name</label>
+      <input id="login-name" type="text" placeholder="e.g. Alex" autocomplete="off">
+    </div>
+    <div class="field">
+      <label>Class code</label>
+      <input id="login-code" type="text" placeholder="The code your teacher gave you" autocomplete="off">
+    </div>
+    <details style="margin-bottom: 12px;">
+      <summary class="mut" style="cursor:pointer; font-size:12px;">I'm the teacher</summary>
+      <div class="field" style="margin-top: 10px;">
+        <label>Teacher PIN (optional)</label>
+        <input id="login-teacher" type="password" placeholder="Leave blank if you&#39;re a student">
+      </div>
+    </details>
+    <button class="btn btn-primary" style="width:100%" onclick="window.appLogin()">Continue</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN APP
+============================================================ -->
+<div class="app hidden" id="mainApp">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-dot"></span>Trade Journal</div>
+    <nav class="nav" id="nav">
+      <button data-view="dashboard" class="active"><span class="icon">📊</span>Dashboard</button>
+      <button data-view="trades"><span class="icon">📋</span>Trades</button>
+      <button data-view="new"><span class="icon">➕</span>New Trade</button>
+      <button data-view="mistakes"><span class="icon">⚠️</span>Mistakes</button>
+      <button data-view="leaderboard" id="navLeaderboard"><span class="icon">🏆</span>Leaderboard</button>
+      <button data-view="settings"><span class="icon">⚙️</span>Settings</button>
+    </nav>
+    <div class="students" id="studentsPanel">
+      <h4>Students</h4>
+      <div id="studentList"></div>
+    </div>
+    <div class="who">
+      <div>
+        <div class="who-name" id="whoName">—</div>
+        <div class="who-role" id="whoRole">—</div>
+      </div>
+      <div title="Connection" class="conn" id="connDot"></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- DASHBOARD -->
+    <section id="view-dashboard" class="view active">
+      <div class="topbar">
+        <div>
+          <h1 id="dash-title">Dashboard</h1>
+          <div class="sub" id="dash-sub">—</div>
+        </div>
+        <div class="row teacher-only">
+          <select id="dash-filter" onchange="render()"></select>
+        </div>
+      </div>
+      <div class="kpis" id="kpis"></div>
+      <div class="card">
+        <h3>Equity Curve</h3>
+        <canvas id="equityChart" height="100"></canvas>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Recent trades</h3>
+          <div id="recentTrades"></div>
+        </div>
+        <div class="card">
+          <h3>Win/Loss split</h3>
+          <canvas id="winLossChart" height="180"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRADES -->
+    <section id="view-trades" class="view">
+      <div class="topbar">
+        <div>
+          <h1>Trades</h1>
+          <div class="sub" id="trades-sub">All trades</div>
+        </div>
+        <div class="row">
+          <select id="trades-filter" class="teacher-only" onchange="render()"></select>
+          <button class="btn btn-primary" onclick="showView(&#39;new&#39;)">+ New trade</button>
+        </div>
+      </div>
+      <div class="card" style="padding: 0; overflow: auto;">
+        <table id="tradesTable">
+          <thead>
+            <tr>
+              <th>Date</th><th>Student</th><th>Symbol</th><th>Side</th>
+              <th>Entry</th><th>Exit</th><th>Qty</th>
+              <th>P&amp;L</th><th>Setup</th><th>Mistakes</th><th></th>
+            </tr>
+          </thead>
+          <tbody id="tradesBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- NEW / EDIT TRADE -->
+    <section id="view-new" class="view">
+      <div class="topbar">
+        <div>
+          <h1 id="form-title">New Trade</h1>
+          <div class="sub">P&amp;L is calculated automatically.</div>
+        </div>
+      </div>
+      <form id="tradeForm" class="card" onsubmit="window.saveTrade(event)">
+        <input type="hidden" id="f-id">
+        <div class="form-grid">
+          <div class="field teacher-only">
+            <label>Student</label>
+            <select id="f-student"></select>
+          </div>
+          <div class="field">
+            <label>Date</label>
+            <input type="date" id="f-date" required="">
+          </div>
+          <div class="field">
+            <label>Symbol</label>
+            <input type="text" id="f-symbol" placeholder="AAPL" required="">
+          </div>
+          <div class="field">
+            <label>Side</label>
+            <select id="f-side" required="">
+              <option value="long">Long</option>
+              <option value="short">Short</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Entry price</label>
+            <input type="number" id="f-entry" step="0.0001" required="">
+          </div>
+          <div class="field">
+            <label>Exit price</label>
+            <input type="number" id="f-exit" step="0.0001" required="">
+          </div>
+          <div class="field">
+            <label>Quantity</label>
+            <input type="number" id="f-qty" step="0.0001" required="">
+          </div>
+          <div class="field">
+            <label>Fees ($)</label>
+            <input type="number" id="f-fees" step="0.01" value="0">
+          </div>
+          <div class="field">
+            <label>Setup / strategy</label>
+            <input type="text" id="f-setup" placeholder="Breakout, ORB, etc.">
+          </div>
+        </div>
+        <div class="field" style="margin-top: 14px;">
+          <label>Notes</label>
+          <textarea id="f-notes" placeholder="What did you see? Why did you take it?"></textarea>
+        </div>
+        <div class="field" style="margin-top: 14px;">
+          <label>Rule violations / mistakes</label>
+          <div class="checkbox-grid" id="mistakeBoxes"></div>
+        </div>
+        <div class="row" style="margin-top: 20px;">
+          <button type="submit" class="btn btn-primary">Save trade</button>
+          <button type="button" class="btn btn-secondary" onclick="window.resetForm()">Reset</button>
+          <span id="pnlPreview" class="mut" style="margin-left: auto; font-size: 14px;"></span>
+        </div>
+      </form>
+    </section>
+
+    <!-- MISTAKES -->
+    <section id="view-mistakes" class="view">
+      <div class="topbar">
+        <div>
+          <h1>Mistakes &amp; Discipline</h1>
+          <div class="sub">How rule violations affect performance</div>
+        </div>
+        <div class="row teacher-only">
+          <select id="mistakes-filter" onchange="render()"></select>
+        </div>
+      </div>
+      <div class="kpis" id="mistakeKpis"></div>
+      <div class="card">
+        <h3>Frequency by mistake</h3>
+        <div id="mistakeFreq"></div>
+      </div>
+      <div class="card">
+        <h3>P&amp;L impact when mistake is present</h3>
+        <table>
+          <thead><tr><th>Mistake</th><th># Trades</th><th>Win rate</th><th>Total P&amp;L</th><th>Avg P&amp;L</th></tr></thead>
+          <tbody id="mistakeImpact"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- LEADERBOARD (visible to students; teacher uses sidebar) -->
+    <section id="view-leaderboard" class="view">
+      <div class="topbar"><div><h1>Class Leaderboard</h1><div class="sub">Aggregate stats across all students</div></div></div>
+      <div class="card" style="padding: 0; overflow: auto;">
+        <table>
+          <thead>
+            <tr><th>Rank</th><th>Student</th><th># Trades</th><th>Win rate</th><th>Net P&amp;L</th><th>Avg P&amp;L</th></tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="view-settings" class="view">
+      <div class="topbar"><div><h1>Settings</h1></div></div>
+      <div class="card">
+        <h3>You are signed in as</h3>
+        <div class="row between">
+          <div>
+            <div><strong id="settingsName">—</strong></div>
+            <div class="mut" id="settingsRole">—</div>
+          </div>
+          <button class="btn btn-secondary" onclick="window.signOut()">Sign out</button>
+        </div>
+      </div>
+      <div class="card teacher-only">
+        <h3>Rule / mistake tags</h3>
+        <p class="mut" style="margin-top: -8px;">Shared across all students. Edits sync in real-time.</p>
+        <div id="ruleList"></div>
+        <div class="row" style="margin-top: 12px;">
+          <input type="text" id="newRule" placeholder="Add a rule (e.g. Held through earnings)">
+          <button class="btn btn-secondary" onclick="window.addRule()">Add</button>
+        </div>
+      </div>
+      <div class="card teacher-only">
+        <h3>Backup</h3>
+        <p class="mut" style="margin-top: -8px;">Export all trades and rules to a JSON file.</p>
+        <button class="btn btn-primary" onclick="window.exportData()">⬇ Export JSON</button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ============================================================
+     SCRIPTS — Firebase + App
+============================================================ -->
+<script type="module">
+  // ╔══════════════════════════════════════════════════════════╗
+  // ║  FIREBASE CONFIG — paste your config object here          ║
+  // ║  Get it from Firebase Console → Project Settings → Your   ║
+  // ║  apps → SDK setup and configuration                       ║
+  // ╚══════════════════════════════════════════════════════════╝
+  const FIREBASE_CONFIG = {
+    apiKey: "AIzaSyB-byRmN64rjyIkBnl1sJCfkgKOuK8gdYU",
+    authDomain: "splash-journal.firebaseapp.com",
+    projectId: "splash-journal",
+    storageBucket: "splash-journal.firebasestorage.app",
+    messagingSenderId: "321429706542",
+    appId: "1:321429706542:web:6d6f5ab7e83ff804c8ccbf",
+    measurementId: "G-JG0KXMK3XR"
+  };
+
+  // ╔══════════════════════════════════════════════════════════╗
+  // ║  CLASS CODE & TEACHER PIN — change these to your own!     ║
+  // ║  Students need CLASS_CODE to sign in.                     ║
+  // ║  Whoever uses TEACHER_PIN gets the full teacher view.     ║
+  // ╚══════════════════════════════════════════════════════════╝
+  const CLASS_CODE = "splash2026";
+  const TEACHER_PIN = "caleb-mentor-9K2X";
+
+  // ── Firebase imports ──
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import {
+    getFirestore, collection, doc, addDoc, setDoc, updateDoc, deleteDoc,
+    onSnapshot, query, orderBy, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const isConfigured = !FIREBASE_CONFIG.apiKey.startsWith("PASTE");
+  if (!isConfigured) {
+    document.getElementById('configWarning').classList.remove('hidden');
+  }
+
+  let app, auth, db;
+  if (isConfigured) {
+    app = initializeApp(FIREBASE_CONFIG);
+    auth = getAuth(app);
+    db = getFirestore(app);
+  }
+
+  // Expose Firebase ops for our non-module script
+  window.fb = {
+    isConfigured,
+    CLASS_CODE,
+    TEACHER_PIN,
+    auth, db,
+    signInAnon: () => signInAnonymously(auth),
+    listenTrades: (cb) => onSnapshot(query(collection(db, 'trades'), orderBy('date', 'asc')), snap => {
+      const trades = [];
+      snap.forEach(d => trades.push({ id: d.id, ...d.data() }));
+      cb(trades);
+    }, err => { console.error('trades listener', err); document.getElementById('connDot').classList.remove('live'); }),
+    listenRules: (cb) => onSnapshot(doc(db, 'meta', 'config'), snap => {
+      cb(snap.exists() ? (snap.data().rules || []) : null);
+    }),
+    addTrade: (t) => addDoc(collection(db, 'trades'), { ...t, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }),
+    updateTrade: (id, t) => updateDoc(doc(db, 'trades', id), { ...t, updatedAt: serverTimestamp() }),
+    deleteTrade: (id) => deleteDoc(doc(db, 'trades', id)),
+    saveRules: (rules) => setDoc(doc(db, 'meta', 'config'), { rules }, { merge: true })
+  };
+  // Notify the other script that fb is ready
+  window.dispatchEvent(new Event('fb-ready'));
+</script>
+
+<script>
+/* ╔══════════════════════════════════════════════════════════╗
+   ║  APP LOGIC — auth/login, rendering, P&L                  ║
+   ╚══════════════════════════════════════════════════════════╝ */
+const DEFAULT_RULES = [
+  'No stop loss', 'Oversized position', 'Revenge trade', 'FOMO entry',
+  'Chased entry', 'Moved stop loss', 'Held past plan', 'Cut winner early',
+  'Traded outside plan', 'Overtraded'
+];
+const SESSION_KEY = 'tradeJournal.session';
+
+let trades = [];
+let rules = DEFAULT_RULES.slice();
+let session = null;     // { name, role: 'student'|'teacher' }
+let activeFilter = 'all';
+let equityChart = null, winLossChart = null;
+let fbReady = false;
+
+window.addEventListener('fb-ready', () => { fbReady = true; init(); });
+// In case the module runs after this:
+if (window.fb) { fbReady = true; init(); }
+
+function init() {
+  // Try restoring session
+  try { session = JSON.parse(localStorage.getItem(SESSION_KEY)) || null; } catch(e) { session = null; }
+  if (session && session.name && session.role) {
+    enterApp();
+  }
+}
+
+window.appLogin = function() {
+  const errEl = document.getElementById('loginError');
+  errEl.textContent = '';
+  if (!window.fb || !window.fb.isConfigured) {
+    errEl.textContent = 'Firebase isn\'t configured yet. See setup guide.';
+    return;
+  }
+  const name = document.getElementById('login-name').value.trim();
+  const code = document.getElementById('login-code').value.trim();
+  const tpin = document.getElementById('login-teacher').value;
+  if (!name) { errEl.textContent = 'Please enter your name.'; return; }
+  if (code !== window.fb.CLASS_CODE) { errEl.textContent = 'Wrong class code.'; return; }
+  const role = (tpin && tpin === window.fb.TEACHER_PIN) ? 'teacher' : 'student';
+  session = { name, role };
+  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  enterApp();
+};
+
+window.signOut = function() {
+  if (!confirm('Sign out?')) return;
+  localStorage.removeItem(SESSION_KEY);
+  location.reload();
+};
+
+async function enterApp() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('mainApp').classList.remove('hidden');
+  document.getElementById('whoName').textContent = session.name;
+  document.getElementById('whoRole').textContent = session.role;
+  document.getElementById('settingsName').textContent = session.name;
+  document.getElementById('settingsRole').textContent = session.role === 'teacher' ? 'Teacher view' : 'Student view';
+  applyRoleVisibility();
+
+  // Sign in anonymously (required by our Firestore rules)
+  try { await window.fb.signInAnon(); }
+  catch(err) {
+    alert('Sign-in failed: ' + err.message + '\n\nMake sure Anonymous Auth is enabled in Firebase.');
+    return;
+  }
+
+  // Listeners
+  window.fb.listenTrades(list => {
+    trades = list;
+    document.getElementById('connDot').classList.add('live');
+    render();
+  });
+  window.fb.listenRules(list => {
+    rules = (list && list.length) ? list : DEFAULT_RULES.slice();
+    render();
+  });
+
+  // Set today's date in form
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+
+  // Wire nav
+  document.querySelectorAll('.nav button').forEach(b =>
+    b.addEventListener('click', () => showView(b.dataset.view)));
+}
+
+function applyRoleVisibility() {
+  const isTeacher = session.role === 'teacher';
+  document.querySelectorAll('.teacher-only').forEach(el => {
+    el.style.display = isTeacher ? '' : 'none';
+  });
+  // Sidebar student list only useful for teacher
+  document.getElementById('studentsPanel').style.display = isTeacher ? '' : 'none';
+  // Leaderboard nav only for students (teacher uses sidebar)
+  document.getElementById('navLeaderboard').classList.toggle('hidden', isTeacher);
+}
+
+/* ───── P&L ───── */
+function computePnL(t) {
+  const dir = t.side === 'long' ? 1 : -1;
+  return dir * (Number(t.exit) - Number(t.entry)) * Number(t.qty) - Number(t.fees || 0);
+}
+function fmt$(n) { return (Number(n)||0).toLocaleString('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}); }
+function fmtPct(n) { return (Number(n)*100).toFixed(1) + '%'; }
+function cls(n) { return n > 0 ? 'pos' : n < 0 ? 'neg' : 'mut'; }
+
+/* ───── FILTER ───── */
+function visibleTrades() {
+  // Students see only their own. Teachers see all (with optional filter).
+  if (session.role === 'student') {
+    return trades.filter(t => t.studentName === session.name);
+  }
+  if (activeFilter && activeFilter !== 'all') {
+    return trades.filter(t => t.studentName === activeFilter);
+  }
+  return trades.slice();
+}
+function allStudentNames() {
+  const set = new Set();
+  trades.forEach(t => { if (t.studentName) set.add(t.studentName); });
+  return Array.from(set).sort();
+}
+
+/* ───── VIEW SWITCH ───── */
+window.showView = function(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  if (name === 'new') resetForm();
+  render();
+};
+
+/* ───── TRADES (form) ───── */
+window.resetForm = function() {
+  document.getElementById('tradeForm').reset();
+  document.getElementById('f-id').value = '';
+  document.getElementById('form-title').textContent = 'New Trade';
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('f-fees').value = '0';
+  renderMistakeBoxes([]);
+  populateStudentSelect();
+  updatePnlPreview();
+};
+window.editTrade = function(id) {
+  const t = trades.find(x => x.id === id);
+  if (!t) return;
+  if (session.role === 'student' && t.studentName !== session.name) {
+    return alert('You can only edit your own trades.');
+  }
+  showView('new');
+  document.getElementById('form-title').textContent = 'Edit Trade';
+  document.getElementById('f-id').value = t.id;
+  if (document.getElementById('f-student')) {
+    populateStudentSelect();
+    document.getElementById('f-student').value = t.studentName;
+  }
+  document.getElementById('f-date').value = t.date;
+  document.getElementById('f-symbol').value = t.symbol;
+  document.getElementById('f-side').value = t.side;
+  document.getElementById('f-entry').value = t.entry;
+  document.getElementById('f-exit').value = t.exit;
+  document.getElementById('f-qty').value = t.qty;
+  document.getElementById('f-fees').value = t.fees || 0;
+  document.getElementById('f-setup').value = t.setup || '';
+  document.getElementById('f-notes').value = t.notes || '';
+  renderMistakeBoxes(t.mistakes || []);
+  updatePnlPreview();
+};
+window.deleteTrade = async function(id) {
+  const t = trades.find(x => x.id === id);
+  if (!t) return;
+  if (session.role === 'student' && t.studentName !== session.name) {
+    return alert('You can only delete your own trades.');
+  }
+  if (!confirm('Delete this trade?')) return;
+  try { await window.fb.deleteTrade(id); }
+  catch(err) { alert('Delete failed: ' + err.message); }
+};
+window.saveTrade = async function(e) {
+  e.preventDefault();
+  const id = document.getElementById('f-id').value;
+  const studentName = session.role === 'teacher'
+    ? (document.getElementById('f-student').value || session.name)
+    : session.name;
+  const trade = {
+    studentName,
+    date: document.getElementById('f-date').value,
+    symbol: document.getElementById('f-symbol').value.toUpperCase().trim(),
+    side: document.getElementById('f-side').value,
+    entry: parseFloat(document.getElementById('f-entry').value),
+    exit: parseFloat(document.getElementById('f-exit').value),
+    qty: parseFloat(document.getElementById('f-qty').value),
+    fees: parseFloat(document.getElementById('f-fees').value || 0),
+    setup: document.getElementById('f-setup').value.trim(),
+    notes: document.getElementById('f-notes').value.trim(),
+    mistakes: Array.from(document.querySelectorAll('.mistake-cb:checked')).map(cb => cb.value)
+  };
+  try {
+    if (id) await window.fb.updateTrade(id, trade);
+    else await window.fb.addTrade(trade);
+    showView('trades');
+  } catch(err) { alert('Save failed: ' + err.message); }
+};
+function renderMistakeBoxes(checked) {
+  const c = document.getElementById('mistakeBoxes');
+  c.innerHTML = rules.map(r => {
+    const isC = checked.includes(r);
+    return `<label class="checkbox-item ${isC?'checked':''}">
+      <input type="checkbox" class="mistake-cb" value="${escapeAttr(r)}" ${isC?'checked':''}
+        onchange="this.parentElement.classList.toggle('checked', this.checked)" />
+      ${escapeHtml(r)}
+    </label>`;
+  }).join('');
+}
+function populateStudentSelect() {
+  const sel = document.getElementById('f-student');
+  if (!sel) return;
+  const names = allStudentNames();
+  if (!names.includes(session.name)) names.push(session.name);
+  sel.innerHTML = names.map(n => `<option value="${escapeAttr(n)}">${escapeHtml(n)}</option>`).join('') +
+    `<option value="${escapeAttr(session.name)}">${escapeHtml(session.name)} (me)</option>`;
+  // de-dup
+  const seen = new Set();
+  Array.from(sel.options).forEach(o => { if (seen.has(o.value)) o.remove(); else seen.add(o.value); });
+}
+
+/* live P&L preview */
+['f-entry','f-exit','f-qty','f-fees'].forEach(id => {
+  document.addEventListener('input', e => { if (e.target && e.target.id === id) updatePnlPreview(); });
+});
+document.addEventListener('change', e => { if (e.target && e.target.id === 'f-side') updatePnlPreview(); });
+function updatePnlPreview() {
+  const entry = parseFloat(document.getElementById('f-entry').value);
+  const exit = parseFloat(document.getElementById('f-exit').value);
+  const qty = parseFloat(document.getElementById('f-qty').value);
+  const fees = parseFloat(document.getElementById('f-fees').value || 0);
+  const side = document.getElementById('f-side').value;
+  const el = document.getElementById('pnlPreview');
+  if (!el) return;
+  if (isFinite(entry) && isFinite(exit) && isFinite(qty)) {
+    const pnl = computePnL({entry, exit, qty, fees, side});
+    el.textContent = 'P&L: ' + fmt$(pnl);
+    el.className = cls(pnl);
+  } else { el.textContent = ''; }
+}
+
+/* ───── RULES ───── */
+window.addRule = async function() {
+  const v = document.getElementById('newRule').value.trim();
+  if (!v) return;
+  if (rules.includes(v)) return;
+  const next = rules.concat([v]);
+  try { await window.fb.saveRules(next); document.getElementById('newRule').value = ''; }
+  catch(err) { alert('Failed: ' + err.message); }
+};
+window.removeRule = async function(r) {
+  if (!confirm(`Remove rule "${r}"? Existing trades keep their tags.`)) return;
+  const next = rules.filter(x => x !== r);
+  try { await window.fb.saveRules(next); } catch(err) { alert('Failed: ' + err.message); }
+};
+
+/* ───── EXPORT ───── */
+window.exportData = function() {
+  const blob = new Blob([JSON.stringify({ trades, rules }, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `trade-journal-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+};
+
+/* ───── STATS ───── */
+function statsFor(list) {
+  const n = list.length;
+  if (n === 0) return { n:0, total:0, wins:0, losses:0, winRate:0, avgWin:0, avgLoss:0, profitFactor:0, expectancy:0, biggestWin:0, biggestLoss:0 };
+  let total=0, wins=0, losses=0, gw=0, gl=0, bw=0, bl=0;
+  list.forEach(t => {
+    const p = computePnL(t);
+    total += p;
+    if (p > 0) { wins++; gw += p; if (p > bw) bw = p; }
+    else if (p < 0) { losses++; gl += -p; if (p < bl) bl = p; }
+  });
+  const winRate = wins / n;
+  const avgWin = wins ? gw / wins : 0;
+  const avgLoss = losses ? gl / losses : 0;
+  const profitFactor = gl ? gw / gl : (gw > 0 ? Infinity : 0);
+  const expectancy = (winRate * avgWin) - ((1 - winRate) * avgLoss);
+  return { n, total, wins, losses, winRate, avgWin, avgLoss, profitFactor, expectancy, biggestWin: bw, biggestLoss: bl };
+}
+
+/* ───── RENDER ───── */
+function render() {
+  if (!session) return;
+  // Read current filter selection
+  if (session.role === 'teacher') {
+    const sel = document.getElementById('dash-filter');
+    activeFilter = sel ? sel.value : 'all';
+  } else {
+    activeFilter = session.name;
+  }
+  renderFilters();
+  renderSidebar();
+  renderDashboard();
+  renderTrades();
+  renderMistakes();
+  renderLeaderboard();
+  renderSettings();
+  populateStudentSelect();
+}
+
+function renderFilters() {
+  if (session.role !== 'teacher') return;
+  const names = allStudentNames();
+  ['dash-filter','trades-filter','mistakes-filter'].forEach(fid => {
+    const sel = document.getElementById(fid);
+    if (!sel) return;
+    const cur = sel.value || activeFilter;
+    sel.innerHTML = `<option value="all">All students</option>` +
+      names.map(n => `<option value="${escapeAttr(n)}">${escapeHtml(n)}</option>`).join('');
+    sel.value = cur;
+  });
+}
+
+function renderSidebar() {
+  if (session.role !== 'teacher') return;
+  const list = document.getElementById('studentList');
+  const allTotal = statsFor(trades).total;
+  let html = `<div class="student-row ${activeFilter==='all'?'active':''}" onclick="window.selectStudent('all')">
+    <div><div class="name">All students</div><div class="pnl ${cls(allTotal)}">${fmt$(allTotal)}</div></div>
+  </div>`;
+  allStudentNames().forEach(n => {
+    const total = statsFor(trades.filter(t => t.studentName === n)).total;
+    html += `<div class="student-row ${activeFilter===n?'active':''}" onclick="window.selectStudent('${escapeAttr(n)}')">
+      <div><div class="name">${escapeHtml(n)}</div><div class="pnl ${cls(total)}">${fmt$(total)}</div></div>
+    </div>`;
+  });
+  list.innerHTML = html;
+}
+window.selectStudent = function(n) {
+  activeFilter = n;
+  ['dash-filter','trades-filter','mistakes-filter'].forEach(fid => {
+    const sel = document.getElementById(fid); if (sel) sel.value = n;
+  });
+  render();
+};
+
+function renderDashboard() {
+  const list = visibleTrades().slice().sort((a,b) => a.date.localeCompare(b.date));
+  const s = statsFor(list);
+  const title = session.role === 'student' ? `${session.name}'s Journal`
+    : (activeFilter === 'all' ? 'Dashboard' : activeFilter);
+  const sub = session.role === 'student' ? 'Your trades only'
+    : (activeFilter === 'all' ? 'All students combined' : `Stats for ${activeFilter}`);
+  document.getElementById('dash-title').textContent = title;
+  document.getElementById('dash-sub').textContent = sub;
+
+  const kpis = [
+    { label: 'Net P&L', value: fmt$(s.total), cls: cls(s.total) },
+    { label: 'Trades', value: s.n },
+    { label: 'Win rate', value: fmtPct(s.winRate) },
+    { label: 'Profit factor', value: isFinite(s.profitFactor) ? s.profitFactor.toFixed(2) : '∞' },
+    { label: 'Expectancy', value: fmt$(s.expectancy), cls: cls(s.expectancy) },
+    { label: 'Avg win', value: fmt$(s.avgWin), cls: 'pos' },
+    { label: 'Avg loss', value: fmt$(-s.avgLoss), cls: 'neg' },
+    { label: 'Biggest win / loss', value: fmt$(s.biggestWin) + ' / ' + fmt$(s.biggestLoss) }
+  ];
+  document.getElementById('kpis').innerHTML = kpis.map(k =>
+    `<div class="kpi"><div class="label">${k.label}</div><div class="value ${k.cls||''}">${k.value}</div></div>`).join('');
+
+  // Equity
+  let cum = 0;
+  const labels = [], data = [];
+  list.forEach(t => { cum += computePnL(t); labels.push(t.date); data.push(cum); });
+  const ctx = document.getElementById('equityChart').getContext('2d');
+  if (equityChart) equityChart.destroy();
+  equityChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets: [{ label: 'Cumulative P&L', data, borderColor: '#7c5cff',
+      backgroundColor: 'rgba(124,92,255,.15)', fill: true, tension: .25, pointRadius: 2, borderWidth: 2 }]},
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: '#1f2530' }, ticks: { color: '#8b949e', maxTicksLimit: 10 } },
+        y: { grid: { color: '#1f2530' }, ticks: { color: '#8b949e', callback: v => '$'+v } } } }
+  });
+
+  // Recent
+  const recent = list.slice(-5).reverse();
+  document.getElementById('recentTrades').innerHTML = recent.length === 0 ?
+    '<div class="empty mut" style="padding:20px;">No trades yet.</div>' :
+    recent.map(t => {
+      const p = computePnL(t);
+      return `<div class="row between" style="padding:8px 0;border-bottom:1px solid var(--border);">
+        <div><strong>${escapeHtml(t.symbol)}</strong>
+          <span class="pill ${t.side==='long'?'pill-long':'pill-short'}">${t.side}</span>
+          <div class="mut" style="font-size:12px;">${t.date} • ${escapeHtml(t.studentName||'—')}</div>
+        </div>
+        <div class="${cls(p)}"><strong>${fmt$(p)}</strong></div>
+      </div>`;
+    }).join('');
+
+  // Win/loss
+  const ctx2 = document.getElementById('winLossChart').getContext('2d');
+  if (winLossChart) winLossChart.destroy();
+  winLossChart = new Chart(ctx2, {
+    type: 'doughnut',
+    data: { labels: ['Wins','Losses','Breakeven'],
+      datasets: [{ data: [s.wins, s.losses, Math.max(0, s.n - s.wins - s.losses)],
+        backgroundColor: ['#22c55e','#ef4444','#3b4252'], borderWidth: 0 }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#e6edf3' } } } }
+  });
+}
+
+function renderTrades() {
+  const list = visibleTrades().slice().sort((a,b) => b.date.localeCompare(a.date));
+  document.getElementById('trades-sub').textContent =
+    session.role === 'student' ? `Your trades (${list.length})`
+    : (activeFilter === 'all' ? `All trades (${list.length})` : `${activeFilter} (${list.length})`);
+  const tbody = document.getElementById('tradesBody');
+  if (list.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="11" class="empty"><h3>No trades yet</h3><div>Click "+ New trade" to log one.</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = list.map(t => {
+    const p = computePnL(t);
+    const mistakes = (t.mistakes || []).map(m => `<span class="pill pill-mistake">${escapeHtml(m)}</span>`).join('');
+    const canEdit = session.role === 'teacher' || t.studentName === session.name;
+    return `<tr>
+      <td>${t.date}</td>
+      <td>${escapeHtml(t.studentName||'—')}</td>
+      <td><strong>${escapeHtml(t.symbol)}</strong></td>
+      <td><span class="pill ${t.side==='long'?'pill-long':'pill-short'}">${t.side}</span></td>
+      <td>${t.entry}</td><td>${t.exit}</td><td>${t.qty}</td>
+      <td class="${cls(p)}"><strong>${fmt$(p)}</strong></td>
+      <td>${escapeHtml(t.setup||'')}</td>
+      <td>${mistakes || '<span class="mut">—</span>'}</td>
+      <td style="white-space:nowrap;">
+        ${canEdit ? `<button class="btn btn-secondary btn-sm" onclick="window.editTrade('${t.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="window.deleteTrade('${t.id}')">Del</button>` : ''}
+      </td></tr>`;
+  }).join('');
+}
+
+function renderMistakes() {
+  const list = visibleTrades();
+  const total = list.length;
+  const tradesWithAny = list.filter(t => (t.mistakes||[]).length > 0).length;
+  const cleanStats = statsFor(list.filter(t => (t.mistakes||[]).length === 0));
+  const dirtyStats = statsFor(list.filter(t => (t.mistakes||[]).length > 0));
+  const discipline = total === 0 ? 0 : (1 - tradesWithAny/total);
+
+  document.getElementById('mistakeKpis').innerHTML = [
+    { l:'Discipline score', v:fmtPct(discipline), cls: discipline >= .8 ? 'pos' : discipline >= .5 ? '' : 'neg', sub:`${tradesWithAny} of ${total} trades had a violation` },
+    { l:'Win rate (clean)', v:fmtPct(cleanStats.winRate), cls:'pos', sub:`${cleanStats.n} trades` },
+    { l:'Win rate (with mistake)', v:fmtPct(dirtyStats.winRate), cls:'neg', sub:`${dirtyStats.n} trades` },
+    { l:'P&L from clean trades', v:fmt$(cleanStats.total), cls:cls(cleanStats.total) },
+    { l:'P&L from dirty trades', v:fmt$(dirtyStats.total), cls:cls(dirtyStats.total) }
+  ].map(k => `<div class="kpi"><div class="label">${k.l}</div><div class="value ${k.cls}">${k.v}</div>${k.sub?`<div class="sub">${k.sub}</div>`:''}</div>`).join('');
+
+  const counts = {};
+  rules.forEach(r => counts[r] = 0);
+  list.forEach(t => (t.mistakes||[]).forEach(m => { counts[m] = (counts[m]||0)+1; }));
+  const max = Math.max(1, ...Object.values(counts));
+  document.getElementById('mistakeFreq').innerHTML = rules.map(r => {
+    const c = counts[r] || 0;
+    return `<div class="bar-row">
+      <div class="bar-label">${escapeHtml(r)}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(c/max*100).toFixed(0)}%"></div></div>
+      <div class="bar-val">${c} trade${c===1?'':'s'}</div></div>`;
+  }).join('');
+
+  const tbody = document.getElementById('mistakeImpact');
+  const rows = rules.map(r => {
+    const ts = list.filter(t => (t.mistakes||[]).includes(r));
+    const st = statsFor(ts);
+    return { r, n: st.n, wr: st.winRate, total: st.total, avg: st.n ? st.total/st.n : 0 };
+  }).sort((a,b) => b.n - a.n);
+  tbody.innerHTML = rows.length === 0 ?
+    `<tr><td colspan="5" class="mut" style="padding:20px;text-align:center;">No rules defined.</td></tr>` :
+    rows.map(r => `<tr><td>${escapeHtml(r.r)}</td><td>${r.n}</td>
+      <td>${r.n ? fmtPct(r.wr) : '—'}</td>
+      <td class="${cls(r.total)}">${r.n ? fmt$(r.total) : '—'}</td>
+      <td class="${cls(r.avg)}">${r.n ? fmt$(r.avg) : '—'}</td></tr>`).join('');
+}
+
+function renderLeaderboard() {
+  const tbody = document.getElementById('leaderboardBody');
+  const groups = {};
+  trades.forEach(t => {
+    if (!t.studentName) return;
+    (groups[t.studentName] = groups[t.studentName] || []).push(t);
+  });
+  const rows = Object.entries(groups).map(([name, list]) => {
+    const s = statsFor(list);
+    return { name, n: s.n, wr: s.winRate, total: s.total, avg: s.n ? s.total/s.n : 0 };
+  }).sort((a,b) => b.total - a.total);
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty"><h3>No trades yet</h3></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map((r, i) => `<tr>
+    <td>${i+1}</td><td>${escapeHtml(r.name)}</td><td>${r.n}</td>
+    <td>${fmtPct(r.wr)}</td>
+    <td class="${cls(r.total)}"><strong>${fmt$(r.total)}</strong></td>
+    <td class="${cls(r.avg)}">${fmt$(r.avg)}</td></tr>`).join('');
+}
+
+function renderSettings() {
+  const list = document.getElementById('ruleList');
+  if (!list) return;
+  list.innerHTML = rules.length === 0 ? '<div class="mut">No rules. Add one below.</div>' :
+    rules.map(r => `<div class="row between" style="padding:6px 0;border-bottom:1px solid var(--border);">
+      <span>${escapeHtml(r)}</span>
+      <button class="btn btn-danger btn-sm" onclick="window.removeRule('${escapeAttr(r)}')">Remove</button>
+    </div>`).join('');
+}
+
+function escapeHtml(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeAttr(s) { return escapeHtml(s).replace(/`/g,'&#96;'); }
+
+// Allow Enter to submit login
+document.getElementById('login-name').addEventListener('keypress', e => { if (e.key === 'Enter') document.getElementById('login-code').focus(); });
+document.getElementById('login-code').addEventListener('keypress', e => { if (e.key === 'Enter') window.appLogin(); });
+</script>
+
+
+</body></html>
